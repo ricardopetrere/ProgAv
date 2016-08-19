@@ -1,0 +1,8 @@
+Single Player
+Side Scroll 2D
+
+Jogador
+  Movimento Esquerda, Direita, Pular
+  Um cenário, 1 plataforma com uma rampa
+Usar Raycast ao invés da física do Unity
+Canais YouTube: Brackeys, Sebastian League
