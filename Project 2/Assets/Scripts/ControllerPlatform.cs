@@ -18,7 +18,7 @@ public class ControllerPlatform : ControllerRayCast {
     float percentBetweenWaypoints;
     float nextMoveTime;
 
-    List<PassengerMovement> passengerMovement;
+    public List<PassengerMovement> passengerMovement;
     Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
 
 	// Use this for initialization
@@ -39,11 +39,12 @@ public class ControllerPlatform : ControllerRayCast {
         Vector3 velocity = CalculatePlatformMovement();
 
         CalculatePassengerMovement(velocity);
+        
 
         MovePassenger(true);
         transform.Translate(velocity);
         MovePassenger(false);
-	}
+    }
 
     float Ease(float x) {
         float a = easeAmount + 1;
@@ -80,6 +81,10 @@ public class ControllerPlatform : ControllerRayCast {
     } 
 
     void MovePassenger(bool beforeMovePlatform) {
+        if(passengerMovement.Count>1)
+        {
+            Debug.Break();
+        }
         foreach(PassengerMovement passenger in passengerMovement) {
             if(!passengerDictionary.ContainsKey(passenger.transform)) {
                 passengerDictionary.Add(passenger.transform, passenger.transform.GetComponent<Controller2D>());
@@ -171,7 +176,8 @@ public class ControllerPlatform : ControllerRayCast {
     }
 
     //Struct com todas as informções nescessarias para o movimento do passageiro
-    struct PassengerMovement {
+    [System.Serializable]
+    public struct PassengerMovement {
         public Transform transform;
         public Vector3 velocity;
         public bool standingOnPlatform;

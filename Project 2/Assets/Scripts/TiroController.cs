@@ -8,6 +8,8 @@ public class TiroController : ControllerRayCast {
     public float directionX;
     public float directionY;
 
+    public float damage;
+
 	// Use this for initialization
 	//void Start () {
  //       base.Start();
@@ -47,11 +49,9 @@ public class TiroController : ControllerRayCast {
 
             if (hit)
             {
-                Debug.Log("log");
-
-                if (hit.collider.name == "Inimigo")
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player")
                 {
-                    continue;
+                    hit.transform.GetComponent<Player>().recebeuDano(damage);
                 }
                 Debug.Log("!!COLIDIU!!");
                 Destroy(gameObject);

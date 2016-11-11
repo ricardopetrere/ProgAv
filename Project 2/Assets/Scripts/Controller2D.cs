@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Controller2D : ControllerRayCast {
 
@@ -71,6 +72,9 @@ public class Controller2D : ControllerRayCast {
                         Invoke("ResetFallingThroughPlatform", 0.5f);
                         continue;
                     }
+                } else if(hit.collider.tag == "Death")
+                {
+                    SceneManager.LoadScene("MainScene");
                 }
 
                 deltaMove.y = (hit.distance - skinWidth) * directionY;

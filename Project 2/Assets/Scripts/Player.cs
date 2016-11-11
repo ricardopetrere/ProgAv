@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent (typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -7,10 +9,13 @@ public class Player : MonoBehaviour {
     public float jumpHeightMin = 1;
     public float timeToJumpApex = 0.4f;
     public float moveSpeed = 6;
+    public float maxLife = 100;
+    float currentLife;
 
     public Animator mAnimator;
     public Transform spriteTransform;
     public Vector3 mScale;
+    public Slider healthBar;
 
     // WallJump
     public float wallSlideSpeed = 3;
@@ -44,6 +49,8 @@ public class Player : MonoBehaviour {
         jumpVelocityMax = Mathf.Abs(gravity) * timeToJumpApex;
         jumpVelocityMin = Mathf.Sqrt(2 * Mathf.Abs(gravity) * jumpHeightMin);
 
+        currentLife = maxLife;
+
         print("Gravity: " + gravity + " |||||| jump velocity: " + jumpVelocityMax);
 	}
 
@@ -67,6 +74,8 @@ public class Player : MonoBehaviour {
         mAnimator.SetFloat("MoveSpeed", Mathf.Abs(velocity.x) / moveSpeed);
         //Setando a escala de acordo com a velocidade
         spriteTransform.localScale = Vector3.right * Mathf.Sign(velocity.x) + Vector3.up + Vector3.forward;
+
+        //calculateLife();
     }
 
     public void SetDirectionalInput(Vector2 input) {
@@ -97,35 +106,60 @@ public class Player : MonoBehaviour {
             velocity.y = jumpVelocityMin;
         }
     }
-	
-    void HandleWallSliding() {
+
+    void calculateLife()
+    {
+        healthBar.value = currentLife / maxLife; 
+    }
+
+    void CalculateVelocity()
+    {
+        float targetVelocityX = directionalInput.x * moveSpeed;
+        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
+        velocity.y += gravity * Time.deltaTime;
+    }
+
+    void HandleWallSliding()
+    {
         wallDirectionX = (controller.collisions.left) ? -1 : 1;
         wallSliding = false;
 
-        if((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0) {
+        if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0)
+        {
             wallSliding = true;
 
-            if(velocity.y < -wallSlideSpeed) {
+            if (velocity.y < -wallSlideSpeed)
+            {
                 velocity.y = -wallSlideSpeed;
             }
-            if(timeToWallUnstick > 0) {
+            if (timeToWallUnstick > 0)
+            {
                 velocityXSmoothing = 0;
                 velocity.x = 0;
 
-                if(directionalInput.x != wallDirectionX && directionalInput.x != 0) {
+                if (directionalInput.x != wallDirectionX && directionalInput.x != 0)
+                {
                     timeToWallUnstick -= Time.deltaTime;
-                } else {
+                }
+                else
+                {
                     timeToWallUnstick = wallStickTime;
                 }
-            } else {
+            }
+            else
+            {
                 timeToWallUnstick = wallStickTime;
             }
         }
     }
 
-    void CalculateVelocity() {
-        float targetVelocityX = directionalInput.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
-        velocity.y += gravity * Time.deltaTime;
+    public void recebeuDano(float dano)
+    {
+        currentLife -= dano;
+        calculateLife();
+        if(currentLife<=0)
+        {
+            SceneManager.LoadScene("MainScene");
+        }
     }
 }
