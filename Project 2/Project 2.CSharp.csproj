@@ -67,7 +67,10 @@
     <Compile Include="Assets\Scripts\ControllerCamera.cs" />
     <Compile Include="Assets\Scripts\ControllerPlatform.cs" />
     <Compile Include="Assets\Scripts\ControllerRayCast.cs" />
+    <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
+    <Compile Include="Assets\Scripts\EspadaController.cs" />
+    <Compile Include="Assets\Scripts\EspadaScript.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\TiroController.cs" />

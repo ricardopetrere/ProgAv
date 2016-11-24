@@ -7,31 +7,17 @@ public class TiroController : ControllerRayCast {
     public float velocity;
     public float directionX;
     public float directionY;
-
+    //public GameObject parent;
     public float damage;
 
-	// Use this for initialization
-	//void Start () {
- //       base.Start();
- //       //this.startPosition = new Vector2(5,0);
- //       //transform.position = startPosition;
- //   }
-	
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
         
-        transform.position -= (transform.right)*velocity*Time.deltaTime;
+        transform.position -= (transform.right*velocity*Time.deltaTime);
         Debug.DrawRay(transform.position, -transform.right*1,Color.red);
         collisions(velocity * Time.deltaTime);
         UpdateRaycastOrigins();
     }
-
-    //Caso o objeto já esteja invisível quando instanciado, ele não entra nesse método
-    //Esse método ocorre APENAS na transição de visível para invisível
-    //void OnBecameInvisible()
-    //{
-    //    Destroy(gameObject);
-    //}
 
     void collisions(float deltaMove)
     {
@@ -51,10 +37,24 @@ public class TiroController : ControllerRayCast {
             {
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player")
                 {
-                    hit.transform.GetComponent<Player>().recebeuDano(damage);
+                    if (hit.transform.gameObject.tag == "Sword")
+                    {
+                        if (hit.transform.root.GetComponent<Player>().attacking)
+                        {
+                            Destroy(gameObject);
+                        }
+                    }
+                    else
+                    {
+                        hit.transform.GetComponent<Player>().takeDamage(damage);
+                        Destroy(gameObject);
+                    }
                 }
-                Debug.Log("!!COLIDIU!!");
-                Destroy(gameObject);
+                else
+                {
+                    //Debug.Log("!!COLIDIU!!");
+                    Destroy(gameObject);
+                }
             }
         }
     }

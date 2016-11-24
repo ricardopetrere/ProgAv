@@ -27,6 +27,10 @@ public class PlayerInput : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.Space)) {
             player.OnJumpInputUp();
         }
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            player.Attack();
+        }
     }
 
     IEnumerator Jump () {

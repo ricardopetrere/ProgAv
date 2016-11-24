@@ -38,11 +38,15 @@ public class Player : MonoBehaviour {
     Controller2D controller;
     Vector3 directionalInput;
 
+    Rigidbody2D espada;
+    public bool attacking;
+
     bool wallSliding;
     int wallDirectionX;
+    
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         controller = GetComponent<Controller2D>();
 
         gravity = -(2 * jumpHeightMax) / Mathf.Pow(timeToJumpApex, 2);
@@ -51,7 +55,9 @@ public class Player : MonoBehaviour {
 
         currentLife = maxLife;
 
-        print("Gravity: " + gravity + " |||||| jump velocity: " + jumpVelocityMax);
+        //print("Gravity: " + gravity + " |||||| jump velocity: " + jumpVelocityMax);
+
+        espada = this.GetComponentInChildren<Rigidbody2D>();
 	}
 
     // Update is called once per frame
@@ -153,13 +159,41 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void recebeuDano(float dano)
+    public void takeDamage(float damage)
     {
-        currentLife -= dano;
+        currentLife -= damage;
         calculateLife();
         if(currentLife<=0)
         {
             SceneManager.LoadScene("MainScene");
         }
+    }
+
+    public void Attack()
+    {
+        //Debug.Log("Começo de animação");
+        mAnimator.SetTrigger("Attack");
+        attacking = true;
+    }
+
+    public void resetAttack()
+    {
+        attacking = false;
+    }
+
+    public bool isAttacking
+    {
+        get
+        {
+            return attacking;
+        }
+    }
+
+
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Colisão - Player");
+
     }
 }

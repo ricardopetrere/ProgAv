@@ -18,7 +18,7 @@ public class ControllerPlatform : ControllerRayCast {
     float percentBetweenWaypoints;
     float nextMoveTime;
 
-    public List<PassengerMovement> passengerMovement;
+    List<PassengerMovement> passengerMovement;
     Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
 
 	// Use this for initialization
